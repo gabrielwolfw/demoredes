@@ -178,7 +178,7 @@ export default function SignupForm({ onSwitchMode }: { onSwitchMode: () => void 
         {/* Security Info */}
         <div className="mt-6 pt-6 border-t border-border">
           <div className="flex items-start gap-3">
-            <div className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center shrink-0 mt-0.5">
               <span className="text-accent text-xs font-bold">✓</span>
             </div>
             <div className="text-xs text-muted-foreground">
