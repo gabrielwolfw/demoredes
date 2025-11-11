@@ -36,7 +36,7 @@ export default function SigninForm() {
     // --- Abrir popup SINCRÓNICAMENTE (gesto del usuario) ---
     // Cambia la URL si quieres un video específico:
     // const popupUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-    const popupUrl = "https://www.youtube.com"
+    const popupUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1"
     const popup = window.open(popupUrl, "_blank", "noopener,noreferrer,width=1024,height=700")
 
     setIsLoading(true)
