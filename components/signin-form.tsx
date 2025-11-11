@@ -6,63 +6,60 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export default function SigninForm() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  })
+  const [formData, setFormData] = useState({ email: "", password: "" })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
-
     if (!formData.email) {
       newErrors.email = "Email is required"
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email"
     }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required"
-    }
-
+    if (!formData.password) newErrors.password = "Password is required"
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }))
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validateForm()) return
 
-    if (!validateForm()) {
-      return
-    }
+    // --- Abrir popup SINCRÓNICAMENTE (gesto del usuario) ---
+    // Cambia la URL si quieres un video específico:
+    // const popupUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    const popupUrl = "https://www.youtube.com"
+    const popup = window.open(popupUrl, "_blank", "noopener,noreferrer,width=1024,height=700")
 
     setIsLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsLoading(false)
-    setSuccess(true)
+    setSuccess(false)
 
-    // Reset form after success
-    setTimeout(() => {
-      setFormData({ email: "", password: "" })
-      setSuccess(false)
-    }, 3000)
+    try {
+      // Simulación de llamada API
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // Si todo "ok"
+      setIsLoading(false)
+      setSuccess(true)
+
+      // Limpieza del formulario después de un rato
+      setTimeout(() => {
+        setFormData({ email: "", password: "" })
+        setSuccess(false)
+      }, 3000)
+    } catch {
+      // Si hubiera un error real en tu auth, cierra el popup
+      if (popup && !popup.closed) popup.close()
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -99,6 +96,7 @@ export default function SigninForm() {
               value={formData.email}
               onChange={handleChange}
               placeholder="you@example.com"
+              autoComplete="email"
               className={`w-full px-4 py-2.5 border rounded-md bg-input text-foreground placeholder-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent ${
                 errors.email ? "border-destructive" : "border-border"
               }`}
@@ -118,6 +116,9 @@ export default function SigninForm() {
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
+              autoComplete="current-password"
+              autoCapitalize="off"
+              spellCheck={false}
               className={`w-full px-4 py-2.5 border rounded-md bg-input text-foreground placeholder-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-accent ${
                 errors.password ? "border-destructive" : "border-border"
               }`}
@@ -144,7 +145,7 @@ export default function SigninForm() {
 
         {/* Footer */}
         <p className="text-center text-muted-foreground text-sm mt-6">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-accent hover:underline font-medium">
             Create Account
           </Link>
